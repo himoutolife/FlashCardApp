@@ -18,9 +18,9 @@ function CreateDeck(){
 
 
 
-    function handleSubmit(event){
+   async function handleSubmit(event){
         event.preventDefault()
-        const response =  createDeck(newDeck);
+        const response = await createDeck(newDeck);
         history.push(`/decks/${response.id}`);//takes back to deck list
     }
     const handleChange=(event)=>{
