@@ -21,7 +21,7 @@ function CreateDeck(){
     function handleSubmit(event){
         event.preventDefault()
         const response =  createDeck(newDeck);
-        history.push(`/deck/${response.id}`);//takes back to deck list
+        history.push(`/decks/${response.id}`);//takes back to deck list
     }
     const handleChange=(event)=>{
         setNewDeck({...newDeck,[event.target.name]:event.target.value})
