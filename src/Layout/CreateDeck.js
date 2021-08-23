@@ -8,19 +8,21 @@
 
 import React, {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
-import { createDeck } from "../utils/api/index";
+import { createDeck} from "../utils/api/index";
+
 
 function CreateDeck(){
     const history =useHistory();
     const [newDeck, setNewDeck] = useState({name:"", description:""})
 
 
-    const handleSubmit= async (event) =>{
+
+
+    function handleSubmit(event){
         event.preventDefault()
-        const response = await createDeck(newDeck);
+        const response =  createDeck(newDeck);
         history.push(`/deck/${response.id}`);//takes back to deck list
     }
-
     const handleChange=(event)=>{
         setNewDeck({...newDeck,[event.target.name]:event.target.value})
     }
@@ -40,7 +42,7 @@ function CreateDeck(){
                 </ol>
             </nav>
             {/*form for creating a new deck*/}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit= {handleSubmit}>
                 <div>
                 <label>Name:</label> <br />
                 <input
