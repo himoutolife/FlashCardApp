@@ -1,12 +1,3 @@
-//DONE
-
-//path /decks/:deckId/edit
-//use readDeck()from api/index.js
-//nav bar with link to home, name of deck being edited and text "edit deck" ex: home/rendering in react/edit deck
-//same form as create deck, but is prefilled with info for existing deck
-//can edit and update form
-//cancel button takes to deck screen
-
 import React, { useState,useEffect }  from 'react'
 import {Link, useHistory,useParams} from "react-router-dom";
 import {readDeck, updateDeck} from "../utils/api/index";
@@ -36,7 +27,7 @@ function EditDeck(){
     const handleSubmit =async(event) => {
         event.preventDefault()
         const response = await updateDeck(deck)
-        history.push (`/decks.${response.id}`)
+        history.push (`/decks/${response.id}`)
     }
 
     function changeName(e) {                             //change deck state when name changes
@@ -70,4 +61,14 @@ function EditDeck(){
         )
 }
 
+
+
+
+
 export default EditDeck;
+
+// must use readDeck() function to load existing deck
+// breadcrumb nav abr with link to home '/', followed by name of deck being edited, and the text "edit deck"  (e.g., Home/Rendering in React/Edit Deck).
+// display the same form as the Create Deck screen, except it is pre-filled with info for the existing deck
+// user can edit and update form
+//if the user clicks "cancel" button, taken to the Deck screen.
