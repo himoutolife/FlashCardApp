@@ -1,61 +1,67 @@
-import React from "react";
-import { useHistory } from "react-router";
+import React, {useState} from "react";
+import {Link } from "react-router-dom";
 
-function DeckForm({
-  submitFunction,
-  deck = {},
-  changeName,
-  changeDesc,
-}) {
-  const history = useHistory();
+function DeckForm({onSubmit, initialState = { name: "", description: "" },}){
 
-  function deckName() {                                //if there is no deck name, display nothing
-    return deck.name ? deck.name : "";
-  }
+  const [deck, setDeck] = useState(initialState);
 
-  function deckDesc() {                              //if there is no deck description, display nothing
-    return deck.description ? deck.description : "";
-  }
+  function changeHandler({ target: { name, value } }) {
+    setDeck((prevState) => ({
+    ...prevState,
+    [name]: value,
+    }));
+}
+
+function submitHandler(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    onSubmit(deck);
+}
+  
   return (
-    <form>
-      <div className="form-group">
-        <label htmlFor="exampleFormControlInput1">Deck Name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="exampleFormControlInput1"
-          value={deckName()}
-          onChange={changeName}
-        ></input>
-      </div>
-      <div className="form-group">
-        <label htmlFor="exampleFormControlTextarea1">Deck Description</label>
-        <textarea
-          className="form-control"
-          id="exampleFormControlTextarea1"
-          rows="3"
-          placeholder="Enter a brief description ot your deck."
-          required
-          value={deckDesc()}
-          onChange={changeDesc}
-        ></textarea>
-      </div>
-      <button
-        className="btn btn-secondary"
-        type="button"
-        onClick={() => history.go(-1)}
-      >
-        Cancel
-      </button>
-      <button
-        className="btn btn-primary"
-        type="submit"
-        onClick={submitFunction}
-      >
-        Submit
-      </button>
-    </form>
-  );
+    <div>
+        <form onSubmit={submitHandler} className="deck-edit">
+            <fieldset>
+            <div className="form-group">
+                <label htmlFor="name">Name</label>
+                <input
+                type="text"
+                id="name"
+                name="name"
+                className="form-control"
+                value={deck && deck.name}
+                required={true}
+                placeholder="Deck Name"
+                onChange={changeHandler}
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="description">Description</label>
+                <textarea
+                id="description"
+                name="description"
+                className="form-control"
+                rows="4"
+                required={true}
+                placeholder="Brief description of the deck"
+                value={deck && deck.description}
+                onChange={changeHandler}
+                />
+            </div>
+            
+            <Link to="/">
+                <button 
+                className="btn btn-secondary" type="button">Cancel</button>
+            </Link>
+            <button 
+            className="btn btn-primary" type="submit">
+                Submit
+            </button>
+
+            </fieldset>
+        </form>
+        </div>
+    );
 }
 
 export default DeckForm;
