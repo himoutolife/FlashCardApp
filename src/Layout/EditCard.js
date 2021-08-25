@@ -8,86 +8,77 @@
 import React, { useEffect, useState } from "react"
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { updateCard, readDeck, readCard } from '../utils/api/index.js'
-import CardForm from "./CardForm.js"
+import CardForm from "./CardForm"
+// allows the user to modify information on an existing card
+// path: /decks/:deckId/cards/:cardId/edit
 
 function EditCard() {
-    const [deck, setDeck] = useState([])
-    const [card, setCard] = useState({front: "", back: "", deckId: ""})//sets the defaults
-    const {deckId, cardId} = useParams()
-    const history = useHistory()
+    const [deck, setDeck] = useState([])                                        // declaring variable "deck",
+    const [card, setCard] = useState({front: "", back: "", deckId: ""})        // declaring variable "card"
+    const {deckId, cardId} = useParams()                                        // accessing deckId and cardId from params          
+    const history = useHistory()                                                // capturing useHistory is "history" variable
 
-    useEffect(() => {//after rendering, retrives the card with a specific card id
+    useEffect(() => {                                                           //useEffect for card. After rendering, retrieves the card with a specified ID 
         const abortController = new AbortController()
 
-        const cardInfo = async () => {
-            const response = await readCard(cardId, abortController.signal)
+        const cardInfo = async () => {                                          //capturing API response in "cardInfo"
+            const response = await readCard(cardId, abortController.signal)     
             setCard(() => response)
         }
         cardInfo()
         return () => abortController.abort()
-    }, [cardId])//after finding the card, STOP
+    }, [cardId])                                                               //Stop rendering after doing useEffect for specified cardId
 
-    useEffect(() => {//after rendering, retrives the deck with a specific deck id
+    useEffect(() => {                                                         //useEffect for deck. After rendering, retrieves the deck with a specified ID 
         const abortController = new AbortController()
 
-        const deckInfo = async () => {
+        const deckInfo = async () => {                                       //capturing API response in "deckInfo"
             const response = await readDeck(deckId, abortController.signal)
-            setDeck(() => response)
+            setDeck(() => response)                                          
         }
 
         deckInfo()
         return () => abortController.abort()
-    }, [deckId])//after finding the deck, STOP
+    }, [deckId])                                                            //Stop rendering after doing useEffect for specified deckId
 
 
-    const handleChange = (event) => {//handling the data change
-        setCard({...card, [event.target.name]: event.target.value})
-    }
-    
 
-    const handleSubmit = async (event) => {//saving card info
+    const handleSubmit = async (event) => {
         event.preventDefault()
         await updateCard(card)
         history.push(`/decks/${deck.id}`)
     }
 
+    
+    function changeFront(e) {                                       //update the state as card info changes for the front
+        setCard({ ...card, front: e.target.value });
+    }
+    function changeBack(e) {                                        //updates the state of the card info as it changes for the back
+        setCard({ ...card, back: e.target.value });
+    }
+
     return (
-        <div className="col-9 mx-auto">
-
-            {/* navigation bar */}
-            <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        
-                        {/* link to home page */}
-                        <Link to={"/"}>
-                                Home
-                        </Link>
+        <div>
+           <nav aria-label="breadcrumb">            {/* navbar */}
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <Link to={'/'}>Home</Link>        {/* link to home screen*/}
                     </li>
-
-                    {/* deck name */}
-                    <li className="breadcrumb-item">
-                        <Link to={`/decks/${deckId}`}>
-                            {deck.name}
-                        </Link>
+                    <li class="breadcrumb-item">
+                        <Link to={`/decks/${deckId}`}>{deck.name}</Link>       {/* link to home screen */}
                     </li>
-
-                    {/* edit card */}
-                    <li className="breadcrumb-item">
-                        Edit Card {cardId}
+                    <li class="breadcrumb-item" aria-current="page">                {/* 'Edit Card' followed by card Id using variable 'cardId' */}
+                        `Edit Card ${cardId}`
                     </li>
                 </ol>
-
             </nav>
-
-            <div className="row pl-3 pb-2">
-                <h1>Edit Card</h1>
-            </div>
-            <CardForm 
-                submitForm={handleSubmit} 
-                changeForm={handleChange} 
-                card={card} 
-                deckId={deckId} />
+                <h4>Edit Deck</h4>
+                <CardForm
+                    submitHandler={handleSubmit}
+                    card={card}
+                    changeFront={changeFront}
+                    changeBack={changeBack}
+                />
         </div>
     )
 }
