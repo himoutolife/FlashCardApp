@@ -8,12 +8,12 @@
 //click "done" button takes to decks screen
 // allows the user to add a new card to an existing deck
 
-
 import React, {useEffect, useState} from 'react'
 import { Link, useParams } from "react-router-dom"
 import {createCard, readDeck } from "../utils/api/index";
 import CardForm from "./CardForm";
-
+// allows the user to add a new card to an existing deck
+// path: /decks/:deckId/cards/new
 
 
 function AddCard(){
